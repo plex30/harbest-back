@@ -2,15 +2,20 @@ const mongooseLoader = require('./loaders/mongooseLoader');
 const expressLoader = require('./loaders/expressLoader');
 
 
-const loader = async(app)=>{
-    try {
+async function loader(app) {
+
+    try{
         await mongooseLoader();
         console.log('DB running');
-        expressLoader(app)
+        expressLoader(app);
         console.log('Express running');
-    } catch (error) {
-        
+       
     }
+    catch(err){
+        console.error(err.message);
+        throw err;
+    };
+
 }
 
 module.exports = loader;

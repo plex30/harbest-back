@@ -3,22 +3,12 @@ const config = require('./config');
 const loader = require('./loader');
 const cors = require('cors');
 
-const onError = (serverError) => {
-    if (serverError.code === 'EACCES') {
-        console.error(`${config.server.port} requires elevated privileges`);
-    } else if (serverError.code === 'EADDRINUSE') {
-        console.error(`${config.server.port} already in use`);
-    } else {
-        console.error(serverError);
-    }
-    process.exit(1);
-}
 
-const bootstraping = () => {
+function bootstraping() {
     const app = express();
 
     app.use((req, res, next) => {
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE', 'PATCH');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE','PATCH'); 
         res.header('Access-Control-Allow-Credentials', true);
         res.header('Access-Control-Allow-Headers', 'Content-Type');
         next();
@@ -37,10 +27,21 @@ const bootstraping = () => {
     const server = app.listen(config.server.port);
 
     server.on('error', onError);
-    server.on('listening', async () => {
+    server.on('listening', async function () {
         console.info(`Server running on http://${config.server.host}:${config.server.port}`);
         await loader(app);
     });
-
-    bootstraping();
 }
+
+function onError(serverError) {
+    if (serverError.code === 'EACCES') {
+        console.error(`${config.server.port} requires elevated privileges`);
+    } else if (serverError.code === 'EADDRINUSE') {
+        console.error(`${config.server.port} already in use`);
+    } else {
+        console.error(serverError);
+    }
+    process.exit(1);
+}
+
+bootstraping();

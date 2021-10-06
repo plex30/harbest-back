@@ -1,8 +1,9 @@
 const Product = require('../models/Product');
 
-const listProducts = async (req, res)=>{
+
+async function listProducts(req, res) {
     try {
-        const results = await Products.find()
+        const results = await Product.find()
         res.json({
             results: results
         })
@@ -13,7 +14,7 @@ const listProducts = async (req, res)=>{
     }
 }
 
-const addProduct = async (req, res)=>{
+const addProduct = async (req, res) => {
     try {
         const thisProduct = new Product(res.body);
         await thisProduct.save();
@@ -27,21 +28,21 @@ const addProduct = async (req, res)=>{
     }
 }
 
-const deleteProduct = async (req, res)=>{
+const deleteProduct = async (req, res) => {
     try {
         await Product.findByIdAndDelete(req.params.id);
         res.json({
             delete: true
-        });  
+        });
     } catch (error) {
         res.json({
             errors: error.message
         })
     }
-    
+
 }
 
-const updateProduct = async (req, res)=>{
+const updateProduct = async (req, res) => {
     try {
         await Product.findOneAndUpdate({
             _id: req.params.id
