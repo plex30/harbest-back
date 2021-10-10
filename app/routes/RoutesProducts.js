@@ -10,7 +10,7 @@ routesProducts.route('/')
 routesProducts.route('/delete/:id')
     .delete(productsController.deleteProduct)
 
-routesProducts.route('update/:id')
+routesProducts.route('/update/:id')
     .patch(productsController.updateProduct)
 
 module.exports = routesProducts;

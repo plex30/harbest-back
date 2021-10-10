@@ -1,12 +1,23 @@
 const Product = require('../models/Product');
 
 
-async function listProducts(req, res) {
+const listProducts = async(req, res) => {
+    
     try {
-        const results = await Product.find()
-        res.json({
-            results: results
-        })
+        const limit = parseInt(req.query.limit); 
+        const skip = parseInt(req.query.skip);
+        const state = req.query.state
+        if (state) {
+            const results = await Product.find({state: state }).skip(skip).limit(limit) 
+            res.json({
+                results: results
+            })
+        }else{
+            const results = await Product.find({}).skip(skip).limit(limit) 
+            res.json({
+                results: results
+            })
+        }   
     } catch (error) {
         res.json({
             errors: error.message
@@ -15,8 +26,9 @@ async function listProducts(req, res) {
 }
 
 const addProduct = async (req, res) => {
+
     try {
-        const thisProduct = new Product(res.body);
+        const thisProduct = new Product(req.body);
         await thisProduct.save();
         res.json({
             results: [thisProduct]
@@ -29,7 +41,9 @@ const addProduct = async (req, res) => {
 }
 
 const deleteProduct = async (req, res) => {
+
     try {
+        
         await Product.findByIdAndDelete(req.params.id);
         res.json({
             delete: true
@@ -43,6 +57,7 @@ const deleteProduct = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
+  
     try {
         await Product.findOneAndUpdate({
             _id: req.params.id
